@@ -9,13 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:receipeId', function(req, res, next) {
-  Receipe.findById(req.params.receipeId, function(err, receipe) {
-  if (err) throw err;
-
-  // object of all the users
-  res.send(receipe);
-  });
-
+  receipesController.show(req, res, next, null);
 });
 
 module.exports = router;

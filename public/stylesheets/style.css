@@ -29,10 +29,23 @@ body, h1, h2, h3, h4, h5, h6 {
   vertical-align: top;
 }
 
+
 .w3-quarter img {
+  width:100%
+}
+
+.w3-threequarter img {
   width:100%
 }
 
 .w3-tag {
   margin-right: 2px;
+}
+
+.ingredients {
+  padding-right: 16px;
+}
+
+.receipe-steps {
+  margin-top: 25px !important;
 }

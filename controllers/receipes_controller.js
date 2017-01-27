@@ -19,6 +19,15 @@ const ReceipesController = {
         });
       }
     });
+  },
+
+  show: function(req, res, next, isApi){
+    Receipe.findById(req.params.receipeId, function(err, receipe) {
+      if (err) throw err;
+
+      // object of all the users
+      res.render('receipes/show', {receipe: receipe});
+    });
   }
 }
 
