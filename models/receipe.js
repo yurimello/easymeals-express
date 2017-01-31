@@ -10,7 +10,7 @@ var receipeInfoSchema = Schema({
 });
 
 var ingredientSchema = Schema({
-  lenght: Number,
+  lenght: String,
   unity_type: String,
   name: String
 })
@@ -36,11 +36,11 @@ var receipeSchema = Schema({
     uri: String,
     category: String,
     receipeId: String,
-    userCount: Number,
     userIds: [String],
     receipe_info: receipeInfoSchema,
     ingredients: [ingredientSchema],
-    instructions: [instructionSchema]
+    instructions: [instructionSchema],
+    bookmarkCount: Number
 });
 
 receipeSchema.plugin(paginate)

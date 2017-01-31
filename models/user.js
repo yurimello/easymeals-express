@@ -25,6 +25,7 @@ userSchema.methods.bookmark = function(receipeId, callback) {
 
     receipe.userIds.push(user._id);
     receipe.receipeId = receipe._id;
+    receipe.bookmarkCount = parseInt(receipe.bookmarkCount) + 1;
 
     receipe.save(function(err, receipe){
       if(err) throw err;

@@ -3,6 +3,7 @@ var db = mongoose.connect('mongodb://localhost/easymeals-express_development');
 var fs = require('fs');
 
 var Receipe = require('./models/receipe');
+var User = require('./models/user');
 
 module.exports = function(grunt) {
   // Project configuration.
@@ -14,7 +15,14 @@ module.exports = function(grunt) {
     var done = this.async();
 
     Receipe.remove({}, function(){
-      done();
+      User.find({}, function(err, users){
+        users.forEach(function(user){
+          user.receipes = [];
+          user.save(function(err, u){
+            done();
+          })
+        })
+      })
     })
   })
 
@@ -24,10 +32,11 @@ module.exports = function(grunt) {
     var receipes = JSON.parse(fs.readFileSync('./receipes.json', 'utf8'));
 
     Receipe.create(receipes, function(err, receipe){
+      console.log(err)
       if (err) throw err;
 
       done();
     })
-    
+
   });
 }

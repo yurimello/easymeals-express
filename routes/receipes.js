@@ -8,7 +8,7 @@ var pageRange = require('../lib/page_range');
 router.get('/', function(req, res, next) {
   var currentPage = req.query.page || 1;
 
-  Receipe.paginate({}, {page: currentPage, limit: 12, select: '_id name image', sort: {name: 'asc'}}, function(err, receipes) {
+  Receipe.paginate({}, {page: currentPage, limit: 12, select: '_id name image', sort: {bookmarkCount: 'desc'}}, function(err, receipes) {
     if (err) throw err;
 
     res.render('receipes/index', {
