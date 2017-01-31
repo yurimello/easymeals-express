@@ -18,6 +18,26 @@ userSchema.virtual('password').set(function(value){
   this.encryptedPassword = bcrypt.hashSync(this._password, this.passwordSalt);
 });
 
+userSchema.methods.bookmark = function(receipeId, callback) {
+  user = this;
+  Receipe.findById(receipeId, function(err, receipe){
+    if(err) throw err;
+
+    receipe.userIds.push(user._id);
+    receipe.receipeId = receipe._id;
+
+    receipe.save(function(err, receipe){
+      if(err) throw err;
+      user.receipes.push(receipe);
+      user.save(function(err, user){
+        if(err) throw err;
+
+        callback(true, user, receipe);
+      })
+    })
+  })
+}
+
 var User = mongoose.model('User', userSchema);
 
 

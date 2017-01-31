@@ -14,4 +14,16 @@ router.get('/', function(req, res, next) {
 
 });
 
+router.get('/:userId/bookmarks/:receipeId', function(req, res, next){
+  User.findById(req.params.userId, function(err, user){
+    user.bookmark(req.params.receipeId, function(success, user, receipe){
+      if(success){
+        res.send({
+          success: success, receipe: receipe, user: user
+        })
+      }
+    })
+  })
+})
+
 module.exports = router;

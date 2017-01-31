@@ -14,7 +14,8 @@ router.get('/', function(req, res, next) {
     res.render('receipes/index', {
       receipes: receipes.docs,
       page: receipes.page, pages: receipes.pages,
-      pageRange: pageRange(receipes.page, receipes.pages)
+      pageRange: pageRange(receipes.page, receipes.pages),
+      userId: req.session.userId
     });
   });
 });
@@ -23,7 +24,7 @@ router.get('/:receipeId', function(req, res, next) {
   Receipe.findById(req.params.receipeId, function(err, receipe) {
     if (err) throw err;
 
-    res.render('receipes/show', {receipe: receipe});
+    res.render('receipes/show', {receipe: receipe, userId: req.session.userId});
   });
 });
 

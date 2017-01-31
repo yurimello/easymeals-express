@@ -7,7 +7,8 @@ block content
         img(src="#{receipe.image}" alt="#{receipe.name}") 
         .w3-cointainer.w3-center
           p= receipe.name
-      
+          if userId
+            a(href="/users/#{userId}/bookmarks/#{receipe._id}") Bookmark
       .receipe-steps
         .w3-half.ingredients
           .w3-border

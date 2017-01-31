@@ -37,6 +37,7 @@ var receipeSchema = Schema({
     category: String,
     receipeId: String,
     userCount: Number,
+    userIds: [String],
     receipe_info: receipeInfoSchema,
     ingredients: [ingredientSchema],
     instructions: [instructionSchema]
