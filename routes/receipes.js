@@ -3,6 +3,7 @@ var router = express.Router();
 
 var Receipe = require('../models/receipe');
 var pageRange = require('../lib/page_range');
+var suggestgrid = require('suggestgrid');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -21,6 +22,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:receipeId', function(req, res, next) {
+  var actionController = suggestgrid.ActionController;
+
+  actionController.postAction({type: "view", user_id: req.session.userId, item_id: req.params.receipeId}, function (error, response) {
+    console.log(response);
+  });
+
   Receipe.findById(req.params.receipeId, function(err, receipe) {
     if (err) throw err;
 

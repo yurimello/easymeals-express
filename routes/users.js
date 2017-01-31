@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var User = require('../models/user');
+var suggestgrid = require('suggestgrid');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -15,6 +16,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:userId/bookmarks/:receipeId', function(req, res, next){
+  var actionController = suggestgrid.ActionController;
+
+  actionController.postAction({type: "bookmark", user_id: req.params.userId, item_id: req.params.receipeId}, function (error, response) {
+    console.log(response);
+  });
+
   User.findById(req.params.userId, function(err, user){
     user.bookmark(req.params.receipeId, function(success, user, receipe){
       if(success){
