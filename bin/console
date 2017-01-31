@@ -2,6 +2,4 @@
 
 const repl = require('repl');
 
-var app = require('../app');
-
 repl.start('> ');

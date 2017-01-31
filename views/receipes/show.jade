@@ -16,13 +16,13 @@ block content
             .w3-container
               ul
                 for ingredient in receipe.ingredients
-                  li= ingredient.name  
+                  li= ingredient.text  
 
         .w3-half
           .w3-border
             header.w3-container
               h1 instructions
             .w3-container
-              ul
-                for ingredient in receipe.ingredients
-                  li= ingredient.name  
+              ol
+                for instruction in receipe.instructions
+                  li= instruction.text  

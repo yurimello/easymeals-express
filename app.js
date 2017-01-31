@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var session = require('express-session')
 
 
 var index = require('./routes/index');
@@ -15,7 +16,17 @@ var api = {
 };
 
 
+var sessions = require('./routes/sessions');
+var Session = require('./lib/session');
+
 var app = express();
+
+app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+  secret: 'keyboard cat',
+  resave: true,
+  saveUninitialized: true
+}))
 
 var db = mongoose.connect('mongodb://localhost/easymeals-express_development');
 
@@ -35,7 +46,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/receipes', receipes);
+app.use('/receipes', Session.isAuthenticated, receipes);
+app.use('/sessions', sessions);
 app.use('/api/receipes', api.receipes);
 
 // catch 404 and forward to error handler

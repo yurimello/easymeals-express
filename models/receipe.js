@@ -15,6 +15,16 @@ var ingredientSchema = Schema({
   name: String
 })
 
+ingredientSchema.virtual('text').get(function() {
+  var str = ''
+
+  if(this.lenght) str = str + this.lenght + ' '
+  if(this.unity_type) str = str + this.unity_type + ' '
+  if(this.name) str = str + this.name
+
+  return str
+});
+
 var instructionSchema = Schema({
   text: String,
   order: Number

@@ -1,11 +1,16 @@
 var express = require('express');
 var router = express.Router();
 
-var receipesController = require('../../controllers/receipes_controller');
+var Receipe = require('../../models/receipe');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  receipesController.index(req, res, next, 'isApi');
+
+  Receipe.find({}, {select: '_id name image', sort: {name: 'asc'}}, function(err, receipes) {
+    if (err) throw err;
+
+    res.send(receipes)
+  });
 });
 
 module.exports = router;
