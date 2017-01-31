@@ -3,6 +3,7 @@ var Receipe = require('./receipe');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 
+var suggestgrid = require('../lib/suggestgrid');
 
 var userSchema = Schema({
     name: String,
@@ -36,6 +37,23 @@ userSchema.methods.bookmark = function(receipeId, callback) {
         callback(true, user, receipe);
       })
     })
+  })
+}
+
+userSchema.methods.forSuggest = function(){
+  return {id: this._id, email: this.email};
+}
+
+userSchema.statics.saveSuggestItems = function(callback){
+  this.find({}, function(err, users){
+    users = users.map(function(user){
+      return user.forSuggest();
+    })
+
+    var metadataController = suggestgrid.MetadataController;
+    metadataController.postBulkUsers(users, function(error, response) {
+      callback(error, response);
+    });
   })
 }
 

@@ -24,7 +24,15 @@ router.get('/:receipeId', function(req, res, next) {
   Receipe.findById(req.params.receipeId, function(err, receipe) {
     if (err) throw err;
 
-    res.render('receipes/show', {receipe: receipe, userId: req.session.userId});
+    receipe.related(function(err, relatedReceipes){
+      if (err) throw err;
+
+      res.render('receipes/show', {
+        receipe: receipe, userId: req.session.userId,
+        relatedReceipes: relatedReceipes
+      });
+    })
+
   });
 });
 

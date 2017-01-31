@@ -27,3 +27,14 @@ block content
               ol
                 for instruction in receipe.instructions
                   li= instruction.text  
+    
+    .w3-onequarter
+      .w3-boarder
+        header
+          h1 Related
+        .w3-container
+          ul
+            for relatedReceipe in relatedReceipes
+              li
+                a(href="/receipes/#{relatedReceipe._id}")= relatedReceipe.name
+        

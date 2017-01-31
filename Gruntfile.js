@@ -39,4 +39,22 @@ module.exports = function(grunt) {
     })
 
   });
+
+  grunt.task.registerTask('receipes:suggest', 'Export receipes for suggestgrid', function(){
+    var done = this.async();
+    Receipe.saveSuggestItems(function(error, response){
+      console.log(error)
+      console.log(response);
+      done();
+    })
+  })
+
+  grunt.task.registerTask('users:suggest', 'Export users for suggestgrid', function(){
+    var done = this.async();
+    User.saveSuggestItems(function(error, response){
+      console.log(error)
+      console.log(response);
+      done();
+    })
+  })
 }
