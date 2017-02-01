@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
   Receipe.paginate({}, {page: currentPage, limit: 12, select: '_id name image', sort: {bookmarkCount: 'desc'}}, function(err, receipes) {
     if (err) throw err;
 
-    res.render('receipes/index', {
+    res.send({
       receipes: receipes.docs,
       page: receipes.page, pages: receipes.pages,
       pageRange: pageRange(receipes.page, receipes.pages),
@@ -34,7 +34,7 @@ router.get('/:receipeId', function(req, res, next) {
     receipe.related(function(err, relatedReceipes){
       if (err) throw err;
 
-      res.render('receipes/show', {
+      res.send({
         receipe: receipe, userId: req.session.userId,
         relatedReceipes: relatedReceipes
       });
