@@ -33,4 +33,14 @@ router.get('/:userId/bookmarks/:receipeId', function(req, res, next){
   })
 })
 
+router.get('/:userId', function(req, res, next){
+  User.findById(req.params.userId, function(err, user){
+    if(err) throw err;
+    receipes = user.receipes.map(function(receipe){
+      return receipe.name;
+    })
+    res.send(receipes);
+  })
+})
+
 module.exports = router;

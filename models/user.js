@@ -3,6 +3,7 @@ var Receipe = require('./receipe');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 
+
 var suggestgrid = require('../lib/suggestgrid');
 
 var userSchema = Schema({

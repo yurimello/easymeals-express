@@ -76,6 +76,20 @@ receipeSchema.statics.saveSuggestItems = function(callback){
   })
 }
 
+
+receipeSchema.pre('update', function(next, done) {
+  receipeId = this._conditions._id
+  document = this._update
+
+  Receipe.findById(receipeId, function(err, receipe){
+
+    receipe.usersReceipe(document["$set"], function(err, receipe){
+      if(err) throw err;
+    })
+    next();
+  })
+})
+
 receipeSchema.methods.related = function(callback){
   var similarityController = suggestgrid.SimilarityController
 
@@ -89,6 +103,28 @@ receipeSchema.methods.related = function(callback){
     Receipe.find({_id: {$in: ids}}, "_id name image", function(err, receipes){
       callback(err, receipes)
     })
+  })
+}
+
+receipeSchema.methods.usersReceipe = function(document, callback){
+  var User = require('./user')
+
+  receipe = this;
+
+  User.where({'receipes.receipeId': receipe._id}).populate('receipes').then(function(users){
+
+    users.forEach(function(user){
+      for(i=0; i < user.receipes.length; i++){
+        if(receipe.receipeId == user.receipes[i].receipeId){
+          nested = {}
+          nested['receipes.' + i] = document
+          user.update({'$set': nested}, function(){if(err) throw err});
+          break;
+        }
+      }
+    })
+
+    callback(err, receipes);
   })
 }
 

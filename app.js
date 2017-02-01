@@ -46,7 +46,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/receipes', Session.isAuthenticated, receipes);
+// app.use('/receipes', Session.isAuthenticated, receipes);
+app.use('/receipes', receipes);
 app.use('/sessions', sessions);
 app.use('/api/receipes', api.receipes);
 

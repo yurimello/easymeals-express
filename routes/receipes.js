@@ -43,4 +43,25 @@ router.get('/:receipeId', function(req, res, next) {
   });
 });
 
+router.post('/', function(req, res, next){
+  receipe = new Receipe(req.body)
+  receipe.save(function(err, receipe){
+    if(err) {
+      res.send(err);
+    } else {
+      res.send(receipe)
+    }
+  })
+})
+
+router.put('/:receipeId', function(req, res, next){
+  Receipe.where({ _id: req.params.receipeId }).update({ $set: req.body }, function(err, receipe){
+    if(err){
+      res.send(err);
+    } else {
+      res.send(receipe);
+    }
+  })
+})
+
 module.exports = router;
