@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+
+mongoimport --db easymeals-express_development --collection users --drop ./db/users.json  --jsonArray
+mongoimport --db easymeals-express_development --collection recipes --drop ./db/recipes.json  --jsonArray
