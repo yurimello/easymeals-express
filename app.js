@@ -1,3 +1,7 @@
+const environment = process.env.ENV || 'development';
+
+var config = require('./config')[environment]
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -8,18 +12,19 @@ var mongoose = require('mongoose');
 var session = require('express-session')
 
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-var receipes = require('./routes/receipes');
-var api = {
-  receipes: require('./routes/api/receipes')
-};
+var index = require('./app/routes/index');
+var users = require('./app/routes/users');
+var receipes = require('./app/routes/receipes');
 
 
-var sessions = require('./routes/sessions');
-var Session = require('./lib/session');
+
+var sessions = require('./app/routes/sessions');
+var Session = require('./app/lib/session');
 
 var app = express();
+
+mongoose.Promise = global.Promise;
+
 
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({
@@ -28,11 +33,11 @@ app.use(session({
   saveUninitialized: true
 }))
 
-var db = mongoose.connect('mongodb://localhost/easymeals-express_development');
+var db = mongoose.connect(config.database_url);
 
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
@@ -49,7 +54,6 @@ app.use('/users', users);
 // app.use('/receipes', Session.isAuthenticated, receipes);
 app.use('/receipes', receipes);
 app.use('/sessions', sessions);
-app.use('/api/receipes', api.receipes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -2,4 +2,12 @@
 
 const repl = require('repl');
 
-repl.start('> ');
+// repl.start('> ');
+
+var User = require('../models/user');
+var Receipe = require('../models/receipe');
+
+var cli = repl.start({prompt: '> '});
+
+cli.context.User = User;
+cli.context.Receipe = Receipe;
