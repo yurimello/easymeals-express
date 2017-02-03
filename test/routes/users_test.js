@@ -1,17 +1,8 @@
-process.env.ENV = 'test';
-
-var usersFactory = require('../factories/users_factory');
-var recipesFactory = require('../factories/recipes_factory');
-
-//Require the dev-dependencies
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../../app');
-let should = chai.should();
+var helper = require('../test_helper')
 
 const User = require('../../app/models/user');
 
-chai.use(chaiHttp);
+let should = helper.chai.should();
 
 describe('Users', () => {
   beforeEach((done) => { //Before each test we empty the database
@@ -21,33 +12,19 @@ describe('Users', () => {
       });
   });
 
-  function postServer(path, params){
-    return chai.request(server).post(path).send(params)
-  }
-
-  function putServer(path, params){
-    return chai.request(server).put(path).send(params)
-  }
-
-  function getServer(path, params){
-    request = chai.request(server).get(path)
-    if(params)
-      request.send(params)
-    return request
-  }
 
   describe('PUT /users/:userId/bookmark/:recipeId', () => {
 
     describe('User bookmarks a recipe', (done) => {
       it('status must be 200(ok)', (done) => {
-        let user = usersFactory.create('user');
-        let recipe = recipesFactory.create('recipe');
+        let user = helper.usersFactory.create('user');
+        let recipe = helper.recipesFactory.create('recipe');
 
         recipe.save(function(err, recipe){
           user.save(function(err, user){
             let actionPath = '/users/'+ user._id + '/bookmarks/' + recipe._id;
 
-            putServer(actionPath)
+            helper.putServer(actionPath)
             .end((err, res) => {
               res.should.have.status(200);
               done();
@@ -57,14 +34,14 @@ describe('Users', () => {
       });
 
       it('return user with new recipe', (done) => {
-        let user = usersFactory.create('user');
-        let recipe = recipesFactory.create('recipe');
+        let user = helper.usersFactory.create('user');
+        let recipe = helper.recipesFactory.create('recipe');
 
         recipe.save(function(err, recipe){
           user.save(function(err, user){
             let actionPath = '/users/'+ user._id + '/bookmarks/' + recipe._id;
 
-            putServer(actionPath)
+            helper.putServer(actionPath)
             .end((err, res) => {
               res.body.recipe.should.have.property('recipeId').eql(recipe._id.toString());
               done();
@@ -76,12 +53,12 @@ describe('Users', () => {
 
     describe('Undefined user tries to bookmark a recipe', (done) => {
       it('status must be 404(not found)', (done) => {
-        let recipe = recipesFactory.create('recipe');
+        let recipe = helper.recipesFactory.create('recipe');
 
         recipe.save(function(err, recipe){
           let actionPath = '/users/'+ undefined + '/bookmarks/' + recipe._id;
 
-          putServer(actionPath)
+          helper.putServer(actionPath)
           .end((err, res) => {
             res.should.have.status(404);
             done();
@@ -90,12 +67,12 @@ describe('Users', () => {
       });
 
       it('must return not found user error message', (done) => {
-        let recipe = recipesFactory.create('recipe');
+        let recipe = helper.recipesFactory.create('recipe');
 
         recipe.save(function(err, recipe){
           let actionPath = '/users/'+ undefined + '/bookmarks/' + recipe._id;
 
-          putServer(actionPath)
+          helper.putServer(actionPath)
           .end((err, res) => {
             res.body.error.should.have.property('message').eql('Not found user');
             done();
@@ -106,12 +83,12 @@ describe('Users', () => {
 
     describe('User tries to bookmark an undefined recipe', (done) => {
       it('status must be 404(not found)', (done) => {
-        let user = usersFactory.create('user');
+        let user = helper.usersFactory.create('user');
 
         user.save(function(err, user){
           let actionPath = '/users/'+ user._id + '/bookmarks/' + undefined;
 
-          putServer(actionPath)
+          helper.putServer(actionPath)
           .end((err, res) => {
             res.should.have.status(404);
             done();
@@ -120,12 +97,12 @@ describe('Users', () => {
       });
 
       it('must return not found recipe error message', (done) => {
-        let user = usersFactory.create('user');
+        let user = helper.usersFactory.create('user');
 
         user.save(function(err, user){
           let actionPath = '/users/'+ user._id + '/bookmarks/' + undefined;
 
-          putServer(actionPath)
+          helper.putServer(actionPath)
           .end((err, res) => {
             res.body.error.should.have.property('message').eql('Not found recipe');
             done();
@@ -139,10 +116,10 @@ describe('Users', () => {
     let actionPath = '/users/';
 
     describe('Create an user', (done) => {
-      let user = usersFactory.create('user').toObject();
+      let user = helper.usersFactory.create('user').toObject();
 
       it('status must be 200(ok)', (done) => {
-        postServer(actionPath, user)
+        helper.postServer(actionPath, user)
         .end((err, res) => {
           res.should.have.status(200);
           done();
@@ -150,7 +127,7 @@ describe('Users', () => {
       });
 
       it('must return new user', (done) => {
-        postServer(actionPath, user)
+        helper.postServer(actionPath, user)
         .end((err, res) => {
           newUser = res.body
           newUser.should.have.property('email').eql(user.email);
@@ -160,10 +137,10 @@ describe('Users', () => {
     });
 
     describe('Cannot create an user', (done) => {
-      let user = usersFactory.create('user', {email: ''}).toObject();
+      let user = helper.usersFactory.create('user', {email: ''}).toObject();
 
       it('status must be 422(Unprocessable Entity)', (done) => {
-        postServer(actionPath, user)
+        helper.postServer(actionPath, user)
         .end((err, res) => {
           res.should.have.status(422);
           done();
@@ -171,7 +148,7 @@ describe('Users', () => {
       });
 
       it('email is required', (done) => {
-        postServer(actionPath, user)
+        helper.postServer(actionPath, user)
         .end((err, res) => {
           res.body.errors.email.should.have.property('kind').eql('required');
           done();
@@ -185,7 +162,7 @@ describe('Users', () => {
 
     describe('GET all the users', (done) => {
       it('status must be 200(ok)', (done) => {
-        getServer(actionPath, null)
+        helper.getServer(actionPath, null)
         .end((err, res) => {
           res.should.have.status(200);
           done();
@@ -193,7 +170,7 @@ describe('Users', () => {
       });
 
       it('response must to be an array', (done) => {
-        getServer(actionPath, null)
+        helper.getServer(actionPath, null)
         .end((err, res) => {
           res.body.should.be.a('array');
           done();
@@ -201,10 +178,10 @@ describe('Users', () => {
       });
 
       it('response must to be an objects array', (done) => {
-        var user = usersFactory.create('user');
+        var user = helper.usersFactory.create('user');
 
         user.save(function(err, user){
-          getServer(actionPath, null)
+          helper.getServer(actionPath, null)
           .end((err, res) => {
             firstUser = res.body[0]
             firstUser.should.be.a('object');
