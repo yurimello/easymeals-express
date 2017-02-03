@@ -28,11 +28,11 @@ router.post('/', function(req, res, next){
 });
 
 router.put('/:userId/bookmarks/:recipeId', function(req, res, next){
-  var actionController = suggestgrid.ActionController;
-
-  actionController.postAction({type: "bookmark", user_id: req.params.userId, item_id: req.params.recipeId}, function (error, response) {
-    console.log(response);
-  });
+  // var actionController = suggestgrid.ActionController;
+  //
+  // actionController.postAction({type: "bookmark", user_id: req.params.userId, item_id: req.params.recipeId}, function (error, response) {
+  //   console.log("SUGGESTGRID: " + response);
+  // });
 
   User.findById(req.params.userId, function(err, user){
 

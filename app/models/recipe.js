@@ -32,14 +32,14 @@ var instructionSchema = Schema({
 })
 
 var recipeSchema = Schema({
-    name: String,
+    name: { type: String, required: true },
     image: String,
     uri: String,
-    category: String,
+    category: { type: String, required: true },
     recipeId: String,
     userIds: [String],
     recipe_info: recipeInfoSchema,
-    ingredients: [ingredientSchema],
+    ingredients: {type: [ingredientSchema], required: true},
     instructions: [instructionSchema],
     bookmarkCount: Number,
     price: Number
@@ -77,17 +77,15 @@ recipeSchema.statics.saveSuggestItems = function(callback){
 }
 
 
-recipeSchema.pre('update', function(next, done) {
-  recipeId = this._conditions._id
-  document = this._update
+recipeSchema.post('save', function(doc, next) {
+  recipeId = doc._id;
+  document = doc.toObject();
 
-  Recipe.findById(recipeId, function(err, recipe){
-
-    recipe.usersRecipe(document["$set"], function(err, recipe){
-      if(err) throw err;
-    })
+  doc.usersRecipe(document, function(err, recipe){
+    if(err) throw err;
     next();
   })
+
 })
 
 recipeSchema.methods.related = function(callback){
@@ -111,20 +109,20 @@ recipeSchema.methods.usersRecipe = function(document, callback){
 
   recipe = this;
 
-  User.where({'recipes.recipeId': recipe._id}).populate('recipes').then(function(users){
-
+  User.where({'recipes._id': recipe._id}).populate('recipes').then(function(users){
     users.forEach(function(user){
       for(i=0; i < user.recipes.length; i++){
-        if(recipe.recipeId == user.recipes[i].recipeId){
+        if(recipe._id.toString() == user.recipes[i]._id.toString()){
           nested = {}
           nested['recipes.' + i] = document
-          user.update({'$set': nested}, function(){if(err) throw err});
+          user.update({'$set': nested}, function(err){
+            if(err) throw err
+          });
           break;
         }
       }
     })
-
-    callback(err, recipes);
+    callback();
   })
 }
 

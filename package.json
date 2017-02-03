@@ -23,6 +23,6 @@
     "mocha": "~3.1.2",
     "chai":  "~3.5.0",
     "chai-http": "~3.0.0",
-    "chai-js-factories": "~0.1.5"
+    "js-factories": "~1.1.1"
   }
 }
