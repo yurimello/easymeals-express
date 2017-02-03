@@ -2,11 +2,11 @@ extends ../layout
 
 block content
   .w3-row-padding.w3-padding-16.w3-center#food
-    for receipe in receipes
+    for recipe in recipes
       .w3-quarter
-        a(href="/receipes/#{receipe._id}")
-          img(src="#{receipe.image}" alt="Sandwich") 
-          h3= receipe.name
+        a(href="/recipes/#{recipe._id}")
+          img(src="#{recipe.image}" alt="Sandwich") 
+          h3= recipe.name
           p Just some random text, lorem ipsum text praesent tincidunt ipsum lipsum
   
   //- Pagination
@@ -14,16 +14,16 @@ block content
     ul.w3-pagination
       if page > 1
         li 
-          a.w3-hover-black(href="/receipes?page=1") «
+          a.w3-hover-black(href="/recipes?page=1") «
       - for(i = pageRange.firstPage; i <= pageRange.lastPage; i++)
         li
           if i == page 
             a.w3-black(href="#")= i
           else
-            a.w3-hover-black(href="/receipes?page=#{i}")= i
+            a.w3-hover-black(href="/recipes?page=#{i}")= i
       if page < pages
         li
-          a.w3-hover-black(href="/receipes?page=#{pages}") »
+          a.w3-hover-black(href="/recipes?page=#{pages}") »
       
         
   hr#about

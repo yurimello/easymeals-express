@@ -4,9 +4,9 @@ var Schema = mongoose.Schema;
 
 var suggestgrid = require('../lib/suggestgrid');
 
-var receipeInfoSchema = Schema({
+var recipeInfoSchema = Schema({
   preptime: String,
-  receipe_yield: String
+  recipe_yield: String
 });
 
 var ingredientSchema = Schema({
@@ -31,21 +31,21 @@ var instructionSchema = Schema({
   order: Number
 })
 
-var receipeSchema = Schema({
+var recipeSchema = Schema({
     name: String,
     image: String,
     uri: String,
     category: String,
-    receipeId: String,
+    recipeId: String,
     userIds: [String],
-    receipe_info: receipeInfoSchema,
+    recipe_info: recipeInfoSchema,
     ingredients: [ingredientSchema],
     instructions: [instructionSchema],
     bookmarkCount: Number,
     price: Number
 });
 
-receipeSchema.methods.ingredientsForSuggest = function(){
+recipeSchema.methods.ingredientsForSuggest = function(){
 
   return this.ingredients.map(function(ingredient){
     return ingredient.name;
@@ -53,20 +53,20 @@ receipeSchema.methods.ingredientsForSuggest = function(){
 
 }
 
-receipeSchema.methods.forSuggest = function(){
+recipeSchema.methods.forSuggest = function(){
   return {
     id: this._id, name: this.name, category: this.category,
     ingredients: this.ingredientsForSuggest()
   }
 }
 
-receipeSchema.plugin(paginate)
+recipeSchema.plugin(paginate)
 
 
-receipeSchema.statics.saveSuggestItems = function(callback){
-  this.find({}, function(err, receipes){
-    items = receipes.map(function(receipe){
-      return receipe.forSuggest();
+recipeSchema.statics.saveSuggestItems = function(callback){
+  this.find({}, function(err, recipes){
+    items = recipes.map(function(recipe){
+      return recipe.forSuggest();
     })
 
     var metadataController = suggestgrid.MetadataController;
@@ -77,20 +77,20 @@ receipeSchema.statics.saveSuggestItems = function(callback){
 }
 
 
-receipeSchema.pre('update', function(next, done) {
-  receipeId = this._conditions._id
+recipeSchema.pre('update', function(next, done) {
+  recipeId = this._conditions._id
   document = this._update
 
-  Receipe.findById(receipeId, function(err, receipe){
+  Recipe.findById(recipeId, function(err, recipe){
 
-    receipe.usersReceipe(document["$set"], function(err, receipe){
+    recipe.usersRecipe(document["$set"], function(err, recipe){
       if(err) throw err;
     })
     next();
   })
 })
 
-receipeSchema.methods.related = function(callback){
+recipeSchema.methods.related = function(callback){
   var similarityController = suggestgrid.SimilarityController
 
   similarityController.getSimilarItems({item_id: this._id, filter: {equal: {category: this.category}}}, function(error, response) {
@@ -100,34 +100,34 @@ receipeSchema.methods.related = function(callback){
       return mongoose.Types.ObjectId(item.id);
     })
 
-    Receipe.find({_id: {$in: ids}}, "_id name image", function(err, receipes){
-      callback(err, receipes)
+    Recipe.find({_id: {$in: ids}}, "_id name image", function(err, recipes){
+      callback(err, recipes)
     })
   })
 }
 
-receipeSchema.methods.usersReceipe = function(document, callback){
+recipeSchema.methods.usersRecipe = function(document, callback){
   var User = require('./user')
 
-  receipe = this;
+  recipe = this;
 
-  User.where({'receipes.receipeId': receipe._id}).populate('receipes').then(function(users){
+  User.where({'recipes.recipeId': recipe._id}).populate('recipes').then(function(users){
 
     users.forEach(function(user){
-      for(i=0; i < user.receipes.length; i++){
-        if(receipe.receipeId == user.receipes[i].receipeId){
+      for(i=0; i < user.recipes.length; i++){
+        if(recipe.recipeId == user.recipes[i].recipeId){
           nested = {}
-          nested['receipes.' + i] = document
+          nested['recipes.' + i] = document
           user.update({'$set': nested}, function(){if(err) throw err});
           break;
         }
       }
     })
 
-    callback(err, receipes);
+    callback(err, recipes);
   })
 }
 
-var Receipe = mongoose.model('Receipe', receipeSchema);
+var Recipe = mongoose.model('Recipe', recipeSchema);
 
-module.exports = Receipe;
+module.exports = Recipe;

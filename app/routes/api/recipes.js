@@ -1,15 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-var Receipe = require('../../models/receipe');
+var Recipe = require('../../models/recipe');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 
-  Receipe.find({}, {select: '_id name image', sort: {name: 'asc'}}, function(err, receipes) {
+  Recipe.find({}, {select: '_id name image', sort: {name: 'asc'}}, function(err, recipes) {
     if (err) throw err;
 
-    res.send(receipes)
+    res.send(recipes)
   });
 });
 

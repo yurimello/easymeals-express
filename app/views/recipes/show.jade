@@ -4,19 +4,19 @@ block content
   .w3-container
     .w3-threequarter
       .w3-border
-        img(src="#{receipe.image}" alt="#{receipe.name}") 
+        img(src="#{recipe.image}" alt="#{recipe.name}") 
         .w3-cointainer.w3-center
-          p= receipe.name
+          p= recipe.name
           if userId
-            a(href="/users/#{userId}/bookmarks/#{receipe._id}") Bookmark
-      .receipe-steps
+            a(href="/users/#{userId}/bookmarks/#{recipe._id}") Bookmark
+      .recipe-steps
         .w3-half.ingredients
           .w3-border
             header.w3-container
               h1 Ingredients
             .w3-container
               ul
-                for ingredient in receipe.ingredients
+                for ingredient in recipe.ingredients
                   li= ingredient.text  
 
         .w3-half
@@ -25,7 +25,7 @@ block content
               h1 instructions
             .w3-container
               ol
-                for instruction in receipe.instructions
+                for instruction in recipe.instructions
                   li= instruction.text  
     
     .w3-onequarter
@@ -34,7 +34,7 @@ block content
           h1 Related
         .w3-container
           ul
-            for relatedReceipe in relatedReceipes
+            for relatedRecipe in relatedRecipes
               li
-                a(href="/receipes/#{relatedReceipe._id}")= relatedReceipe.name
+                a(href="/recipes/#{relatedRecipe._id}")= relatedRecipe.name
         

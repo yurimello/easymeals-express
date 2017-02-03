@@ -1,18 +1,18 @@
-const Receipe = require('../../app/models/receipe');
+const Recipe = require('../../app/models/recipe');
 var chai = require('chai');
 var chaiJsFactories = require('chai-js-factories');
 chai.use(chaiJsFactories);
 
-chai.factory.define('receipe', function (attributes) {
+chai.factory.define('recipe', function (attributes) {
   attributes = attributes || {};
-  receipeAttrs = {
+  recipeAttrs = {
     name: attributes.hasOwnProperty('name') || 'Macarrão bolonhesa',
     category: 'massas',
     image: 'http://img.itdg.com.br/tdg/images/recipes/000/000/231/80944/80944_original.jpg',
     uri: 'http://www.tudogostoso.com.br/receita/231-macarrao-bolonhesa.html',
-    receipe_info: {
+    recipe_info: {
       preptime: '45 min',
-      receipe_yield: '6'
+      recipe_yield: '6'
     },
     ingredients: [
       { name: 'Cebola', length: '1' },
@@ -35,7 +35,7 @@ chai.factory.define('receipe', function (attributes) {
     ]
   };
 
-  return new Receipe(receipeAttrs);
+  return new Recipe(recipeAttrs);
 });
 
 module.exports = chai.factory

@@ -1,7 +1,7 @@
 process.env.ENV = 'test';
 
 var usersFactory = require('../factories/users_factory');
-var receipesFactory = require('../factories/recipes_factory');
+var recipesFactory = require('../factories/recipes_factory');
 
 //Require the dev-dependencies
 let chai = require('chai');
@@ -36,16 +36,16 @@ describe('Users', () => {
     return request
   }
 
-  describe('PUT /users/:userId/bookmark/:receipeId', () => {
+  describe('PUT /users/:userId/bookmark/:recipeId', () => {
 
-    describe('User bookmarks a receipe', (done) => {
+    describe('User bookmarks a recipe', (done) => {
       it('status must be 200(ok)', (done) => {
         let user = usersFactory.create('user');
-        let receipe = receipesFactory.create('receipe');
+        let recipe = recipesFactory.create('recipe');
 
-        receipe.save(function(err, receipe){
+        recipe.save(function(err, recipe){
           user.save(function(err, user){
-            let actionPath = '/users/'+ user._id + '/bookmarks/' + receipe._id;
+            let actionPath = '/users/'+ user._id + '/bookmarks/' + recipe._id;
 
             putServer(actionPath)
             .end((err, res) => {
@@ -56,17 +56,17 @@ describe('Users', () => {
         });
       });
 
-      it('return user with new receipe', (done) => {
+      it('return user with new recipe', (done) => {
         let user = usersFactory.create('user');
-        let receipe = receipesFactory.create('receipe');
+        let recipe = recipesFactory.create('recipe');
 
-        receipe.save(function(err, receipe){
+        recipe.save(function(err, recipe){
           user.save(function(err, user){
-            let actionPath = '/users/'+ user._id + '/bookmarks/' + receipe._id;
+            let actionPath = '/users/'+ user._id + '/bookmarks/' + recipe._id;
 
             putServer(actionPath)
             .end((err, res) => {
-              res.body.receipe.should.have.property('receipeId').eql(receipe._id.toString());
+              res.body.recipe.should.have.property('recipeId').eql(recipe._id.toString());
               done();
             })
           })
@@ -74,12 +74,12 @@ describe('Users', () => {
       })
     });
 
-    describe('Undefined user tries to bookmark a receipe', (done) => {
+    describe('Undefined user tries to bookmark a recipe', (done) => {
       it('status must be 404(not found)', (done) => {
-        let receipe = receipesFactory.create('receipe');
+        let recipe = recipesFactory.create('recipe');
 
-        receipe.save(function(err, receipe){
-          let actionPath = '/users/'+ undefined + '/bookmarks/' + receipe._id;
+        recipe.save(function(err, recipe){
+          let actionPath = '/users/'+ undefined + '/bookmarks/' + recipe._id;
 
           putServer(actionPath)
           .end((err, res) => {
@@ -90,10 +90,10 @@ describe('Users', () => {
       });
 
       it('must return not found user error message', (done) => {
-        let receipe = receipesFactory.create('receipe');
+        let recipe = recipesFactory.create('recipe');
 
-        receipe.save(function(err, receipe){
-          let actionPath = '/users/'+ undefined + '/bookmarks/' + receipe._id;
+        recipe.save(function(err, recipe){
+          let actionPath = '/users/'+ undefined + '/bookmarks/' + recipe._id;
 
           putServer(actionPath)
           .end((err, res) => {
@@ -104,7 +104,7 @@ describe('Users', () => {
       })
     });
 
-    describe('User tries to bookmark an undefined receipe', (done) => {
+    describe('User tries to bookmark an undefined recipe', (done) => {
       it('status must be 404(not found)', (done) => {
         let user = usersFactory.create('user');
 
@@ -119,7 +119,7 @@ describe('Users', () => {
         })
       });
 
-      it('must return not found receipe error message', (done) => {
+      it('must return not found recipe error message', (done) => {
         let user = usersFactory.create('user');
 
         user.save(function(err, user){
@@ -127,7 +127,7 @@ describe('Users', () => {
 
           putServer(actionPath)
           .end((err, res) => {
-            res.body.error.should.have.property('message').eql('Not found receipe');
+            res.body.error.should.have.property('message').eql('Not found recipe');
             done();
           })
         })

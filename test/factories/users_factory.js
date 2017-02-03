@@ -9,7 +9,7 @@ chai.factory.define('user', function (attributes) {
   return new User({
     email: attributes.hasOwnProperty('email') ? attributes.email : 'test@user.com',
     password: attributes.hasOwnProperty('password') ? attributes.password : 'testpassword',
-    receipes: [attributes.receipe]
+    recipes: [attributes.recipe]
   });
 });
 

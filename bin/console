@@ -5,9 +5,9 @@ const repl = require('repl');
 // repl.start('> ');
 
 var User = require('../models/user');
-var Receipe = require('../models/receipe');
+var Recipe = require('../models/recipe');
 
 var cli = repl.start({prompt: '> '});
 
 cli.context.User = User;
-cli.context.Receipe = Receipe;
+cli.context.Recipe = Recipe;

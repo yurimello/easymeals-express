@@ -27,10 +27,10 @@ router.post('/', function(req, res, next){
   })
 });
 
-router.put('/:userId/bookmarks/:receipeId', function(req, res, next){
+router.put('/:userId/bookmarks/:recipeId', function(req, res, next){
   var actionController = suggestgrid.ActionController;
 
-  actionController.postAction({type: "bookmark", user_id: req.params.userId, item_id: req.params.receipeId}, function (error, response) {
+  actionController.postAction({type: "bookmark", user_id: req.params.userId, item_id: req.params.recipeId}, function (error, response) {
     console.log(response);
   });
 
@@ -40,15 +40,15 @@ router.put('/:userId/bookmarks/:receipeId', function(req, res, next){
       res.status(404)
       res.send({error: {message: 'Not found user'}})
     } else {
-      user.bookmark(req.params.receipeId, function(success, user, receipe){
+      user.bookmark(req.params.recipeId, function(success, user, recipe){
         if(success){
           res.send({
-            success: success, receipe: receipe, user: user
+            success: success, recipe: recipe, user: user
           })
         }
         else {
           res.status(404)
-          res.send({error: {message: 'Not found receipe'}})
+          res.send({error: {message: 'Not found recipe'}})
         }
       })
     }
@@ -58,10 +58,10 @@ router.put('/:userId/bookmarks/:receipeId', function(req, res, next){
 router.get('/:userId', function(req, res, next){
   User.findById(req.params.userId, function(err, user){
     if(err) throw err;
-    receipes = user.receipes.map(function(receipe){
-      return receipe.name;
+    recipes = user.recipes.map(function(recipe){
+      return recipe.name;
     })
-    res.send(receipes);
+    res.send(recipes);
   })
 })
 

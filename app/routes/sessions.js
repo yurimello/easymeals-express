@@ -13,7 +13,7 @@ router.post('/', function(req, res, next) {
   Session.authenticate(req.body.email, req.body.password, function(authentication){
     if(authentication.success){
       req.session.userId = authentication.user._id;
-      res.redirect('../receipes/')
+      res.redirect('../recipes/')
     }
     else {
       res.render('sessions/new');

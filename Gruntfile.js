@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var db = mongoose.connect('mongodb://localhost/easymeals-express_development');
 var fs = require('fs');
 
-var Receipe = require('./models/receipe');
+var Recipe = require('./models/recipe');
 var User = require('./models/user');
 
 module.exports = function(grunt) {
@@ -11,13 +11,13 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
   });
 
-  grunt.task.registerTask('receipes:drop', 'drop receipes', function(){
+  grunt.task.registerTask('recipes:drop', 'drop recipes', function(){
     var done = this.async();
 
-    Receipe.remove({}, function(){
+    Recipe.remove({}, function(){
       User.find({}, function(err, users){
         users.forEach(function(user){
-          user.receipes = [];
+          user.recipes = [];
           user.save(function(err, u){
             done();
           })
@@ -26,12 +26,12 @@ module.exports = function(grunt) {
     })
   })
 
-  grunt.task.registerTask('receipes:import', 'Import receipes from json file', function(){
+  grunt.task.registerTask('recipes:import', 'Import recipes from json file', function(){
     var done = this.async();
 
-    var receipes = JSON.parse(fs.readFileSync('./receipes.json', 'utf8'));
+    var recipes = JSON.parse(fs.readFileSync('./recipes.json', 'utf8'));
 
-    Receipe.create(receipes, function(err, receipe){
+    Recipe.create(recipes, function(err, recipe){
       console.log(err)
       if (err) throw err;
 
@@ -40,9 +40,9 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.task.registerTask('receipes:suggest', 'Export receipes for suggestgrid', function(){
+  grunt.task.registerTask('recipes:suggest', 'Export recipes for suggestgrid', function(){
     var done = this.async();
-    Receipe.saveSuggestItems(function(error, response){
+    Recipe.saveSuggestItems(function(error, response){
       console.log(error)
       console.log(response);
       done();

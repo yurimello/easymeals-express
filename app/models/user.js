@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var Receipe = require('./receipe');
+var Recipe = require('./recipe');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 
@@ -11,7 +11,7 @@ var userSchema = Schema({
     email: {type: String, required: true},
     encryptedPassword: String,
     passwordSalt: String,
-    receipes: [Receipe.schema]
+    recipes: [Recipe.schema]
 });
 
 userSchema.virtual('password').set(function(value){
@@ -20,23 +20,23 @@ userSchema.virtual('password').set(function(value){
   this.encryptedPassword = bcrypt.hashSync(this._password, this.passwordSalt);
 });
 
-userSchema.methods.bookmark = function(receipeId, callback) {
+userSchema.methods.bookmark = function(recipeId, callback) {
   user = this;
-  Receipe.findById(receipeId, function(err, receipe){
-    if(err) return callback(false, user, receipe)
+  Recipe.findById(recipeId, function(err, recipe){
+    if(err) return callback(false, user, recipe)
 
-    receipe.userIds.push(user._id);
-    receipe.receipeId = receipe._id;
-    bookmarkCount = receipe.bookmarkCount || 0
-    receipe.bookmarkCount = parseInt(bookmarkCount) + 1;
+    recipe.userIds.push(user._id);
+    recipe.recipeId = recipe._id;
+    bookmarkCount = recipe.bookmarkCount || 0
+    recipe.bookmarkCount = parseInt(bookmarkCount) + 1;
 
-    receipe.save(function(err, receipe){
+    recipe.save(function(err, recipe){
       if(err) throw err;
-      user.receipes.push(receipe);
+      user.recipes.push(recipe);
       user.save(function(err, user){
         if(err) throw err;
 
-        callback(true, user, receipe);
+        callback(true, user, recipe);
       })
     })
   })
