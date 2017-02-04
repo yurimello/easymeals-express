@@ -9,29 +9,30 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var session = require('express-session')
+// var session = require('express-session')
 
 
 var index = require('./app/routes/index');
 var users = require('./app/routes/users');
 var recipes = require('./app/routes/recipes');
-
-
-
 var sessions = require('./app/routes/sessions');
-var Session = require('./app/lib/session');
+
+
+
+// var sessions = require('./app/routes/sessions');
 
 var app = express();
 
+
 mongoose.Promise = global.Promise;
 
-
-app.set('trust proxy', 1) // trust first proxy
-app.use(session({
-  secret: 'keyboard cat',
-  resave: true,
-  saveUninitialized: true
-}))
+//
+// app.set('trust proxy', 1) // trust first proxy
+// app.use(session({
+//   secret: 'keyboard cat',
+//   resave: true,
+//   saveUninitialized: true
+// }))
 
 var db = mongoose.connect(config.database_url);
 

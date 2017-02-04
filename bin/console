@@ -4,8 +4,8 @@ const repl = require('repl');
 
 // repl.start('> ');
 
-var User = require('../models/user');
-var Recipe = require('../models/recipe');
+var User = require('../app/models/user');
+var Recipe = require('../app/models/recipe');
 
 var cli = repl.start({prompt: '> '});
 

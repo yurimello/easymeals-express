@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-var Session = require('../lib/session');
+var Session = require('../models/session');
+var User = require('../models/user');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -12,20 +13,41 @@ router.post('/', function(req, res, next) {
 
   Session.authenticate(req.body.email, req.body.password, function(authentication){
     if(authentication.success){
-      req.session.userId = authentication.user._id;
-      res.redirect('../recipes/')
+      res.send(authentication);
     }
     else {
-      res.render('sessions/new');
+      res.setHeader('WWW-Authenticate', 'Basic realm="need login"');
+      res.status(401);
+      res.send(authentication);
+    }
+  })
+
+})
+
+router.get('/:sessionId', function(req, res, next){
+  Session.findById(req.params.sessionId, function(err, session){
+    if(err){
+      res.status(403);
+      res.send(err);
+    } else {
+      User.findById(session.userId, function(err, user){
+        res.send({
+          user: {email: user.email, name: user.name},
+          session: session
+        })
+      })
     }
   })
 })
 
-router.get('/logout', function(req, res, next) {
-  req.session.destroy(function(err) {
-    if(err) throw err;
-
-    res.redirect('/sessions');
+router.delete('/:sessionId', function(req, res, next) {
+  Session.remove({_id: req.params.sessionId}, function(err){
+    if(err){
+      res.status(403);
+      res.send(err);
+    } else {
+      res.send({message: 'successful logout'})
+    }
   })
 });
 

@@ -18,8 +18,7 @@ router.get('/', function(req, res, next) {
         page: recipes.page,
         pages: recipes.pages,
         pageRange: pageRange(recipes.page, recipes.pages)
-      },
-      userId: req.session.userId
+      }
     });
   });
 });

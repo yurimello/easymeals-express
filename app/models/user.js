@@ -20,6 +20,7 @@ userSchema.virtual('password').set(function(value){
   this.encryptedPassword = bcrypt.hashSync(this._password, this.passwordSalt);
 });
 
+
 userSchema.methods.bookmark = function(recipeId, callback) {
   user = this;
   Recipe.findById(recipeId, function(err, recipe){

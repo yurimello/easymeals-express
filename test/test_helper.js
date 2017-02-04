@@ -17,6 +17,10 @@ module.exports = {
   usersFactory: usersFactory,
   recipesFactory: recipesFactory,
 
+  actionDelete: function(path) {
+    return this.chai.request(this.server).delete(path)
+  },
+
   postServer: function(path, params){
     return this.chai.request(this.server).post(path).send(params)
   },
